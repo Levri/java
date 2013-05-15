@@ -1,0 +1,203 @@
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
+
+public class smo {
+
+  smo() {
+		final JFrame jfrm = new JFrame("Системы массового обслуживания");
+
+		final JFrame frmOneCh = new JFrame("Одноканальная СМО");
+		frmOneCh.setSize(627, 130);
+		final JFrame mngCh = new JFrame("Модель с пост. временем обслуживания");
+		mngCh.setSize(627, 130);
+
+		jfrm.setLocationRelativeTo(null);
+
+		final JFrame outp = new JFrame("Характеристики");
+		outp.setSize(400, 150);
+
+		final JFrame outpMn = new JFrame("Характеристики");
+		outpMn.setSize(400, 150);
+
+		jfrm.setSize(350, 120);
+		jfrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jfrm.setVisible(true);
+		jfrm.setLayout(new FlowLayout());
+		jfrm.setResizable(false);
+
+		frmOneCh.setResizable(false);
+
+		JLabel selectModel = new JLabel("Выбирите одну из двух моделей СМО");
+		jfrm.add(selectModel);
+
+		JButton oneChanel = new JButton("Однокональная СМО");
+		JButton massChanel = new JButton("Модель с пост. временем обслуживания");
+		jfrm.add(oneChanel);
+		jfrm.add(massChanel);
+
+		oneChanel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				final JFrame frmCH = new JFrame("Основные характеристики");
+				JPanel fieldPanel = new JPanel();
+				fieldPanel.setPreferredSize(new Dimension(150, 100));
+				final JTextField ipZ = new JTextField(10);
+				final JTextField ipB = new JTextField(10);
+				
+				JLabel TextB = new JLabel("Число клиентов");
+				JLabel TextZ = new JLabel("Число заявок");
+				fieldPanel.add(TextB);
+				fieldPanel.add(ipZ);
+				fieldPanel.add(TextZ);
+				fieldPanel.add(ipB);
+
+				JButton back = new JButton("Вернуться назад");
+				final DefaultTableModel dtm = new DefaultTableModel(
+						new String[] { "z", "b", "Ls", "Ws", "Lq", "Ws", "Wq", "l" }, 0);
+				JTable table = new JTable(dtm);
+				JScrollPane scroll = new JScrollPane(table);
+
+				JButton schet = new JButton("Посчитать");
+				schet.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+
+						double Ls = 0, Ws = 0, Lq = 0, Wq = 0, l = 0, R = 0;
+						double z = 0, b = 0;
+						z = Double.parseDouble(ipZ.getText());
+						b = Double.parseDouble(ipB.getText());
+						Ls = z / (b - z);
+						Ws = 1 / (b - z);
+						Lq = (Math.pow(z, 2) / (b * (b - z)));
+						Wq = (z / (b * (b - z)));
+						l = (z / b);
+						R = (1 - (z / b));
+						String[] data = new String[8];
+						data[0] = "" + z;
+						data[1] = "" + b;
+						data[2] = "" + Ls;
+						data[3] = "" + Ws;
+						data[4] = "" + Lq;
+						data[5] = "" + Wq;
+						data[6] = "" + l;
+						data[7] = "" + R;
+						dtm.addRow(data);
+					}
+				});
+				fieldPanel.add(schet);
+				fieldPanel.add(back);
+
+				frmCH.add(scroll);
+				frmCH.add(fieldPanel, BorderLayout.WEST);
+
+				frmCH.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				frmCH.setPreferredSize(new Dimension(500, 400));
+				frmCH.setLocationRelativeTo(null);
+				frmCH.pack();
+				frmCH.setVisible(true);
+
+				back.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent arg0) {
+						frmCH.setVisible(false);
+						jfrm.setVisible(true);
+
+					}
+				});
+			}
+		});
+
+		massChanel.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				final JFrame frmCH = new JFrame("Основные характеристики");
+				JPanel fieldPanel = new JPanel();
+				fieldPanel.setPreferredSize(new Dimension(150, 100));
+				final JTextField ipZ = new JTextField(10);
+				final JTextField ipB = new JTextField(10);
+
+				JLabel TextB = new JLabel("Число клиентов");
+				JLabel TextZ = new JLabel("Число заявок");
+				fieldPanel.add(TextB);
+				fieldPanel.add(ipZ);
+				fieldPanel.add(TextZ);
+				fieldPanel.add(ipB);
+
+				JButton back = new JButton("Вернуться назад");
+				final DefaultTableModel dtm = new DefaultTableModel(
+						new String[] { "z", "b", "Lq", "Wq", "Ls", "Ws" }, 0);
+				JTable table = new JTable(dtm);
+				JScrollPane scroll = new JScrollPane(table);
+
+				JButton schet = new JButton("Посчитать");
+				schet.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						double Ls = 0, Ws = 0, Lq = 0, Wq = 0;
+						double z = 0, b = 0;
+						z = Double.parseDouble(ipZ.getText());
+						b = Double.parseDouble(ipB.getText());
+						Lq = (Math.pow(z, 2)) / ((2 * b) * (b - z));
+						Wq = (z / ((2 * b) * (b - z)));
+						Ls = ((Math.pow(z, 2)) / ((2 * b) * (b - z)) + z / b);
+						Ws = (z / ((2 * b) * (b - z)) + 1 / b);
+						String[] data = new String[6];
+						data[0] = "" + z;
+						data[1] = "" + b;
+						data[2] = "" + Lq;
+						data[3] = "" + Wq;
+						data[4] = "" + Ls;
+						data[5] = "" + Ws;
+						dtm.addRow(data);
+					}
+				});
+				fieldPanel.add(schet);
+				fieldPanel.add(back);
+
+				frmCH.add(scroll);
+				frmCH.add(fieldPanel, BorderLayout.WEST);
+
+				frmCH.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+				frmCH.setPreferredSize(new Dimension(500, 400));
+				frmCH.setLocationRelativeTo(null);
+				frmCH.pack();
+				frmCH.setVisible(true);
+
+				back.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent arg0) {
+						frmCH.setVisible(false);
+						jfrm.setVisible(true);
+
+					}
+				});
+			}
+
+		});
+
+	}
+
+	public static void main(String... args) {
+
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				new smo();
+			}
+		});
+
+	}
+
+}
